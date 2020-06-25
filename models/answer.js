@@ -15,7 +15,11 @@ const answerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Question",
         required: true
-    }
+    },
+    upvotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Upvote"
+    }]
 });
 
 const Answer = mongoose.model("Answer", answerSchema);
