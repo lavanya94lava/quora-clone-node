@@ -80,7 +80,7 @@ module.exports.createUser = async function (req,res) {
                         req.flash("success", "message sent successfully");
                         return res.redirect("back");
                 });
-            req.flash("success", "new user created successfully, please click on the link send to your email to verify yourself");
+            req.flash("success", "new user created successfully, please click on the link sent to your email to verify yourself");
         });
     }
     catch (err) { 
@@ -105,7 +105,148 @@ module.exports.verifyUser = async function (req, res) {
         });
     }
     catch (err) { 
-        req.flash("success", "You have loggedIn successfully");
+        req.flash("error", "Error caught");
         res.redirect('back');
     }
 }
+
+
+//create-session after signing in
+module.exports.createSession = function (req,res) { 
+    req.flash("success", "You have loggenIn successfully");
+    return res.redirect("back");
+}
+
+//sign-out functionality
+module.exports.destroySession = function (req, res) {
+    req.flash("success", "You have logged out successfully");
+    req.logout();
+
+    return res.redirect("/");
+}
+
+//forgot password form views 
+module.exports.forgotPassword = function (req, res) { 
+    return res.render("forgot_password", {
+        title: "Forgot Password"
+    });
+}
+
+
+//forgot password post action
+
+module.exports.forgotPasswordAction = async function (req, res) {
+    try {
+        const token = crypto.randomBytes(20).toString("hex");
+
+        await User.findOne({ email: req.body.email }, function (err,user) { 
+            if (!user) { 
+                req.flash("error", "No such user exists, please check");
+                return res.redirect("/users/forgot-password");
+            }
+            user.passwordToken = token;
+            user.tokenExpiry = Date.now() + 1800000;
+            user.save();
+
+            nodemailer.sendMail({
+                to: user.email,
+                subject: "Password Reset Mail For Curiosity ",
+                text:'Click on the link below to reset your password :\n\n' + 'http://'+ req.headers.host + '/users/reset-password/'+token + '\n\n' 
+            }, function (err, info) {
+                    if (err) { 
+                        req.flash("success", "Error in sending Email");
+                        return;
+                    }
+                    req.flash("success", "message sent successfully");
+                    return res.redirect("back");
+            });
+        });
+    }
+    catch (err) { 
+        req.flash("error", "check the function again");
+        return res.redirect("/users/forgot-password");
+    }
+}
+
+//reset form view
+module.exports.resetPasswordForm = function (req, res) { 
+    return res.render("password_reset", {
+        title: "Reset Password",
+        token:req.params.token
+    });
+}
+
+//reset password post action
+module.exports.resetPasswordAction = async function (req,res) { 
+    try {
+        await User.findOne({ passwordToken: req.params.token, tokenExpiry: { $gt: Date.now() } }, function (err, user) { 
+            if (!user) { 
+                req.flash("error", "Token has expired or it is not valid");
+                return res.redirect("back");
+            }
+            if (req.body.password == req.body.confirm_password) {
+                bcrypt.genSalt(10, function (err, user) {
+                    bcrypt.hash(req.body.password, salt, function (err, hash) {
+                        if (err) {
+                            req.flash("error", "error in creating hash");
+                            return res.redirect("back");
+                        }
+                        user.password = hash;
+                        user.save();
+                    });
+                });
+                req.flash("success", "Passwords Changed Successfully");
+                return res.redirect('/');
+            }
+            else { 
+                req.flash("error", "Password did not match");
+                return res.redirect("back");
+            }
+        });
+    }
+    catch (err) {     
+        req.flash("error","some error");
+        return res.redirect("back");
+    }
+}
+
+
+//reset password after sign in 
+
+module.exports.resetPasswordAfterSignIn = async function (req, res) {
+    try {
+        await User.findOne({ email: req.user.email }, function (err,user) {
+            if (!user) { 
+                req.flash("error", "Please check your email again");
+                return res.redirect("back");
+            }
+            if (req.body.password ===req.body.confirm_password) { 
+                bcrypt.genSalt(10, function (err, salt) {
+                    bcrypt.hash(req.body.password, salt, function (err, hash) {
+                        if (err) {
+                            req.flash("error", "error in creating the hash");
+                            return res.redirect("back");
+                        }
+                        user.password = hash;
+                        user.save();
+                    });
+                });
+                req.flash("success", "Password changed successfully");
+                return res.redirect("/users/sign-in");
+            }
+            else {
+                req.flash("error", "Password changed successfully");
+                return res.redirect("back");
+            }
+        });
+    }
+    catch (e) { 
+        req.flash("error", "some error");
+        return res.redirect("back");
+    }
+}
+
+
+
+
+
