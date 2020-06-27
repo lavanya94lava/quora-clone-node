@@ -1,10 +1,14 @@
-const expressLayouts = require("express-ejs-layouts");
+const Question = require("../models/question");
 
 
 module.exports.home = async function (req,res) { 
-    try {
+    try
+    {
+        let allQuestions = await Question.find({}).populate('user').exec();
+
         return res.render('home', {
-            title: "Quora"
+            title: "Quora",
+            allQuestions:allQuestions
         });
     }
 

@@ -1,5 +1,42 @@
-<%if(locals.user){%>
-    <h1>Hiiiii, <%= user.name%></h1>
-<%}else{%>
-    <h1>Hiii, You can either SignIn Or Sign Up</h1>    
-<%}%>
+
+<link rel = "stylesheet" href = "/css/home.css">
+<div class = "page-container">
+    <div id = "question-category">
+        <h2>All the Question Categories</h2>
+    </div>
+    <div id = "feed" >
+        <h2>All the feed</h2>
+        <%if(locals.user){%>
+            <h1>Hiiiii, <%= user.name%></h1>
+        
+            <div id="new-post-container" class = "form-group">
+                <form action="/questions/create" method="POST" id="new-post-form">  
+                    <div><textarea name="question" id="" cols="50" rows="5" placeholder="Type here to ask..."></textarea></div>
+                    <div class="">
+                        <div class="">
+                            <button type = "submit" class="btn btn-primary">Post Question</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+         
+        <%}%>
+
+        <div id = "question-container">
+            <%for(let question of allQuestions){%>
+                <div class = "question-card">
+                    <%= question.content%>
+                </div>    
+            <%}%>
+        </div>
+
+    </div>
+    <div id = "other-users">
+        <h2>All the Users</h2>
+    </div>
+</div>
+
+
+
+
+

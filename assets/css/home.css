@@ -1,0 +1,27 @@
+.page-container{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.page-container > div{
+    margin: 20px;
+}
+
+#question-category{
+    width: 20pc;
+}
+
+#feed{
+    width:50pc;
+}
+
+
+#other-users{
+    width:25pc
+}
+
+body{
+    background-color: lavender;
+}

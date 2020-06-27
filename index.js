@@ -55,7 +55,6 @@ app.use(flash());
 
 app.use(customMware.setFlash);
 
-console.log("I am MAIN");
 app.use("/",require("./routes/index"));
 
 
