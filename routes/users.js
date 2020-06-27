@@ -6,8 +6,8 @@ const homeController = require('../controllers/home_controller');
 const usersController = require('../controllers/users_controller');
 const Recaptcha = require('express-recaptcha').RecaptchaV2
 
-const SITE_KEY = "6Ld9ZuoUAAAAAL_GGpws8a2rdT7JJYMJkkecTgDN";
-const SECRET_KEY = "6Ld9ZuoUAAAAAF3jU7qv4idhY8k4I2cco7clF-y1";
+const SITE_KEY = "6Lfq8KkZAAAAANp08aKXzmCrlsHJ_5GJY-Qz6AuG";
+const SECRET_KEY = "6Lfq8KkZAAAAAKhY64TA4tijDsMNmJAjvRj_HU10";
 
 const recaptcha =  new Recaptcha(SITE_KEY, SECRET_KEY, {callback:'cb'});
 

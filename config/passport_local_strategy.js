@@ -8,8 +8,9 @@ const User = require('../models/user');
 
 const bcrypt = require("bcrypt");
 passport.use(new localStrategy({
-    usernamefield: 'email'
-}, function (email, password, done) { 
+    usernameField: 'email',
+    passReqToCallback: true
+}, function (req, email, password, done) { 
         User.findOne({ email: email }, function (err, user) { 
             if (err) { 
                 req.flash('error', err);
@@ -60,8 +61,8 @@ passport.checkAuthentication = function (req, res, next) {
 }
 
 passport.setAuthenticatedUser = function (req, res, next) { 
-    if (req.isAuthenticated) { 
-        req.locals.user = req.user;
+    if (req.isAuthenticated()) { 
+        res.locals.user = req.user;
     }
     next();
 }

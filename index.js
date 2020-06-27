@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo")(session);
 const port = 8000;
 const db = require('./config/mongoose');
-// const passport = require("passport");
+const passport = require("passport");
 const passportLocal = require("./config/passport_local_strategy");
 const customMware = require("./config/middleware");
 
@@ -16,6 +16,9 @@ app.use(express.urlencoded());
 
 app.use(cookieParser());
 app.use(expressLayouts);
+
+app.set('layout extractStyles',true);
+app.set('layout extractScripts',true);
 
 app.set("view engine", "ejs");
 
@@ -42,17 +45,17 @@ app.use(session({
     )
 }));
 
-// app.use(passport.initialize());
+app.use(passport.initialize());
 
-// app.use(passport.session());
+app.use(passport.session());
 
-// app.use(passport.setAuthenticatedUser);
+app.use(passport.setAuthenticatedUser);
 
 app.use(flash());
 
 app.use(customMware.setFlash);
 
-
+console.log("I am MAIN");
 app.use("/",require("./routes/index"));
 
 

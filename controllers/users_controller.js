@@ -5,14 +5,16 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("../config/nodemailer");
 
 module.exports.signUp = function (req, res) {
-    return res.render('sign_up',{
+    return res.render('sign_up', {
+        recaptcha: res.recaptcha,
         title:"Sign Up"
     });
 }
 
 //sign in form
 module.exports.signIn = function(req,res){
-    return res.render('sign_in',{
+    return res.render('sign_in', {
+        recaptcha: res.recaptcha,
         title:"Sign In"
     });
 }
@@ -56,6 +58,7 @@ module.exports.createUser = async function (req,res) {
             });
         });
 
+        console.log("hashed password", hashedPassword);
         await User.create({
             name: req.body.name,
             email: req.body.email,
@@ -69,10 +72,11 @@ module.exports.createUser = async function (req,res) {
                 return res.redirect("back");
             }
                 nodemailer.sendMail({
-                    to: req.body.email,
+                    to: user.email,
                     subject: "Account Verification for Curiosity App",
-                    text:'Click on the link to verify your account \n\n' + 'http://'+ req.headers.host + '/users/verify-user' + token + '\n\n'
+                    text:'Click on the link to verify your account \n\n' + 'http://'+ req.headers.host + '/users/verify-user/' + token + '\n\n'
                 }, function (err, info) {
+                        console.log("info",info);
                         if (err) { 
                             req.flash("error", "Error in sending the email");
                             return;
@@ -113,8 +117,8 @@ module.exports.verifyUser = async function (req, res) {
 
 //create-session after signing in
 module.exports.createSession = function (req,res) { 
-    req.flash("success", "You have loggenIn successfully");
-    return res.redirect("back");
+    req.flash("success", "You have loggedIn successfully");
+    return res.redirect("/");
 }
 
 //sign-out functionality
@@ -185,7 +189,7 @@ module.exports.resetPasswordAction = async function (req,res) {
                 return res.redirect("back");
             }
             if (req.body.password == req.body.confirm_password) {
-                bcrypt.genSalt(10, function (err, user) {
+                bcrypt.genSalt(10, function (err, salt) {
                     bcrypt.hash(req.body.password, salt, function (err, hash) {
                         if (err) {
                             req.flash("error", "error in creating hash");
