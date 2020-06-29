@@ -28,11 +28,20 @@
                     <div>
                         <strong><%= question.content%></strong>
                     </div>
+                    
                     <div class= "question-asker">
                         <p>Asked by <%= question.user.name%></p>
                     </div>
-                </div>    
-                
+
+                    <div class = "delete-question-container">
+                        <%if(locals.user && locals.user.id == question.user._id){ %>
+                            <small>
+                                <a class="delete-question-button" href="/questions/delete/<%= question._id%>">Delete</a>
+                            </small>
+                        <%}%>
+                    </div>
+                   
+                </div>  
             <%}%>
         </div>
 

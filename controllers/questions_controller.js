@@ -1,5 +1,7 @@
 const Question = require("../models/question");
 
+
+//controller for creating the question using Mongoose ORM
 module.exports.createQuestion = async function (req, res) { 
     try {
         let question = await Question.create({
@@ -21,6 +23,33 @@ module.exports.createQuestion = async function (req, res) {
     }
     catch (e) { 
         console.log(`Error is ${e}`);
-        req.flash("error","Error in Posting a question");
+        req.flash("error", "Error in Posting a question");
+        return res.redirect("back");
+    }
+}
+
+//controller for creating the question using Mongoose ORM
+
+module.exports.deleteQuestion = async function (req, res) { 
+    try {
+        let question = await Question.findById(req.params.id);
+        question.delete();
+
+        console.log("reaching the delete ");
+        if(req.xhr){
+            return res.status(200).json({
+                data:{
+                    question_id:req.params.id
+                },
+                message:"Post deleted"
+            });
+        }
+        req.flash("success", "Question Deleted Successfully");
+        return res.redirect("back");
+    }
+
+    catch (e) { 
+        console.log(`Error is ${e}`);
+        return res.redirect("back");
     }
 }

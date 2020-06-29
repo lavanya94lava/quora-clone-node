@@ -37,6 +37,7 @@ body{
     align-items: center;
 }
 
+/* question card that gets displayed and follows the same structure */
 .question-card{
     background-color: white;
     padding: 10px;
@@ -49,8 +50,19 @@ body{
     font-size: 30px;
     border: 1px solid black;
     border-radius: 10px;
+    position: relative;
 }
 
+/* name of the person who asks the question has a different font size */
 .question-asker{
     font-size: 18px;
 }
+
+.delete-question-container small{
+    position: absolute;
+    right:30px;
+    bottom: 10px;
+    font-size: 15px;
+}
+
+
