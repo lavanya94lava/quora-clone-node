@@ -9,9 +9,9 @@
         <%if(locals.user){%>
             <h1>Hiiiii, <%= user.name%></h1>
         
-            <div id="new-post-container" class = "form-group">
-                <form action="/questions/create" method="POST" id="new-post-form">  
-                    <div><textarea name="question" id="" cols="50" rows="5" placeholder="Type here to ask..."></textarea></div>
+            <div id="new-question-container" class = "form-group">
+                <form action="/questions/create" method="POST" id="new-question-form">  
+                    <div><textarea name="question" id="" cols="60" rows="5" placeholder="Type here to ask..."></textarea></div>
                     <div class="">
                         <div class="">
                             <button type = "submit" class="btn btn-primary">Post Question</button>
@@ -24,9 +24,15 @@
 
         <div id = "question-container">
             <%for(let question of allQuestions){%>
-                <div class = "question-card">
-                    <%= question.content%>
+                <div id = "question-<%= question._id%>" class = "question-card">
+                    <div>
+                        <strong><%= question.content%></strong>
+                    </div>
+                    <div class= "question-asker">
+                        <p>Asked by <%= question.user.name%></p>
+                    </div>
                 </div>    
+                
             <%}%>
         </div>
 

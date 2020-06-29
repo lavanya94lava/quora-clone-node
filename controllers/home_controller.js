@@ -4,7 +4,7 @@ const Question = require("../models/question");
 module.exports.home = async function (req,res) { 
     try
     {
-        let allQuestions = await Question.find({}).populate('user').exec();
+        let allQuestions = await Question.find({}).sort('-createdAt').populate('user').exec();
 
         return res.render('home', {
             title: "Quora",
