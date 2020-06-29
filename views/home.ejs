@@ -9,9 +9,9 @@
         <%if(locals.user){%>
             <h1>Hiiiii, <%= user.name%></h1>
         
-            <div id="new-question-container" class = "form-group">
+            <div id="new-question-container" class = "">
                 <form action="/questions/create" method="POST" id="new-question-form">  
-                    <div><textarea name="question" id="" cols="60" rows="5" placeholder="Type here to ask..."></textarea></div>
+                    <div><textarea  name="question" id="enter-question" cols="60" rows="5" placeholder="Type here to ask..."></textarea></div>
                     <div class="">
                         <div class="">
                             <button type = "submit" class="btn btn-primary">Post Question</button>
