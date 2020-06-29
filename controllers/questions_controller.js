@@ -33,9 +33,8 @@ module.exports.createQuestion = async function (req, res) {
 module.exports.deleteQuestion = async function (req, res) { 
     try {
         let question = await Question.findById(req.params.id);
+        
         question.delete();
-
-        console.log("reaching the delete ");
         if(req.xhr){
             return res.status(200).json({
                 data:{
@@ -44,6 +43,7 @@ module.exports.deleteQuestion = async function (req, res) {
                 message:"Post deleted"
             });
         }
+        
         req.flash("success", "Question Deleted Successfully");
         return res.redirect("back");
     }
